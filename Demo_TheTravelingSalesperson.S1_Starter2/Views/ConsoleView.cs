@@ -12,7 +12,7 @@ namespace Demo_TheTravelingSalesperson
     public class ConsoleView
     {
         #region FIELDS
-        private int maxAttempts;
+        private int maxAttempts = 3;
         private int maxBuySellAmount;
         private int minBuySellAmount;
         #endregion
@@ -43,10 +43,10 @@ namespace Demo_TheTravelingSalesperson
             ConsoleUtil.WindowTitle = "Laughing Leaf Productions";
             ConsoleUtil.HeaderText = "The Traveling Salesperson Application";
         }
-
         /// <summary>
         /// display the Continue prompt
         /// </summary>
+
         public void DisplayContinuePrompt()
         {
             Console.CursorVisible = false;
@@ -60,10 +60,10 @@ namespace Demo_TheTravelingSalesperson
 
             Console.CursorVisible = true;
         }
-
         /// <summary>
         /// display the Exit prompt on a clean screen
         /// </summary>
+
         public void DisplayExitPrompt()
         {
             ConsoleUtil.DisplayReset();
@@ -77,18 +77,17 @@ namespace Demo_TheTravelingSalesperson
 
             System.Environment.Exit(1);
         }
-
-
         /// <summary>
         /// display the welcome screen
         /// </summary>
+
         public void DisplayWelcomeScreen()
         {
             StringBuilder sb = new StringBuilder();
 
             ConsoleUtil.DisplayReset();
 
-            ConsoleUtil.DisplayMessage("Written by John Velis");
+            ConsoleUtil.DisplayMessage("Written by Tyler Kirschke");
             ConsoleUtil.DisplayMessage("Northwestern Michigan College");
             ConsoleUtil.DisplayMessage("");
 
@@ -106,13 +105,13 @@ namespace Demo_TheTravelingSalesperson
 
             DisplayContinuePrompt();
         }
-
         /// <summary>
         /// setup the new salesperson object with the initial data
         /// Note: To maintain the pattern of only the Controller changing the data this method should
         ///       return a Salesperson object with the initial data to the controller. For simplicity in 
         ///       this demo, the ConsoleView object is allowed to access the Salesperson object's properties.
         /// </summary>
+
         public Salesperson DisplaySetupAccount()
         {
             Salesperson _salesperson = new Salesperson();
@@ -121,9 +120,9 @@ namespace Demo_TheTravelingSalesperson
             ConsoleUtil.DisplayReset();
 
             ConsoleUtil.DisplayPromptMessage("First Name: ");
-            _salesperson.FirstName = Console.ReadLine();
+            _salesperson.FirstName = UppercaseFirst(Console.ReadLine());
             ConsoleUtil.DisplayPromptMessage("Last Name: ");
-            _salesperson.LastName = Console.ReadLine();
+            _salesperson.LastName = UppercaseFirst(Console.ReadLine());
             ConsoleUtil.DisplayPromptMessage("Account ID: ");
             _salesperson.AccountID = Console.ReadLine();
 
@@ -178,10 +177,10 @@ namespace Demo_TheTravelingSalesperson
 
             return _salesperson;
         }
-
         /// <summary>
         /// display a closing screen when the user quits the application
         /// </summary>
+
         public void DisplayClosingScreen()
         {
             ConsoleUtil.DisplayReset();
@@ -190,10 +189,10 @@ namespace Demo_TheTravelingSalesperson
 
             DisplayContinuePrompt();
         }
-
         /// <summary>
         /// get the menu choice from the user
         /// </summary>
+
         public MenuOption DisplayGetUserMenuChoice()
         {
             MenuOption userMenuChoice = MenuOption.None;
@@ -216,12 +215,15 @@ namespace Demo_TheTravelingSalesperson
                 ConsoleUtil.DisplayMessage("Please type the number of your menu choice.");
                 ConsoleUtil.DisplayMessage("");
                 Console.Write(
-                    "\t" + "1. Travel" + Environment.NewLine +
-                    "\t" + "2. Display Cities" + Environment.NewLine +
-                    "\t" + "3. Display Account Info" + Environment.NewLine +
-                    "\t" + "4. Buy" + Environment.NewLine +
-                    "\t" + "5. Sell" + Environment.NewLine +
-                    "\t" + "6. Display Inventory" + Environment.NewLine +
+                    "\t" + "1. Setup Account" + Environment.NewLine +
+                    "\t" + "2. Travel" + Environment.NewLine +
+                    "\t" + "3. Display Cities" + Environment.NewLine +
+                    "\t" + "4. Display Account Info" + Environment.NewLine +
+                    "\t" + "5. Buy" + Environment.NewLine +
+                    "\t" + "6. Sell" + Environment.NewLine +
+                    "\t" + "7. Display Inventory" + Environment.NewLine +
+                    "\t" + "8. Save Account Info" + Environment.NewLine +
+                    "\t" + "9. Load Account Info" + Environment.NewLine +
                     "\t" + "E. Exit" + Environment.NewLine);
 
 
@@ -233,27 +235,39 @@ namespace Demo_TheTravelingSalesperson
                 switch (userResponse.KeyChar)
                 {
                     case '1':
-                        userMenuChoice = MenuOption.Travel;
+                        userMenuChoice = MenuOption.SetupAccount;
                         usingMenu = false;
                         break;
                     case '2':
-                        userMenuChoice = MenuOption.DisplayCities;
+                        userMenuChoice = MenuOption.Travel;
                         usingMenu = false;
                         break;
                     case '3':
-                        userMenuChoice = MenuOption.DisplayAccountInfo;
+                        userMenuChoice = MenuOption.DisplayCities;
                         usingMenu = false;
                         break;
                     case '4':
-                        userMenuChoice = MenuOption.Buy;
+                        userMenuChoice = MenuOption.DisplayAccountInfo;
                         usingMenu = false;
                         break;
                     case '5':
-                        userMenuChoice = MenuOption.Sell;
+                        userMenuChoice = MenuOption.Buy;
                         usingMenu = false;
                         break;
                     case '6':
+                        userMenuChoice = MenuOption.Sell;
+                        usingMenu = false;
+                        break;
+                    case '7':
                         userMenuChoice = MenuOption.DisplayInventory;
+                        usingMenu = false;
+                        break;
+                    case '8':
+                        userMenuChoice = MenuOption.SaveAccountInfo;
+                        usingMenu = false;
+                        break;
+                    case '9':
+                        userMenuChoice = MenuOption.LoadAccountInfo;
                         usingMenu = false;
                         break;
                     case 'E':
@@ -278,23 +292,134 @@ namespace Demo_TheTravelingSalesperson
 
             return userMenuChoice;
         }
+
+        /// <summary>
+        /// tells user of successful load of account and travel info
+        /// </summary>
+        /// <param name="_salesperson"></param>
+        public void DisplayConfirmLoadAccountInfo(Salesperson _salesperson)
+        {
+            ConsoleUtil.HeaderText = "Load Account";
+            ConsoleUtil.DisplayReset();
+
+            ConsoleUtil.DisplayMessage("Account information has been successfully loaded\n");
+
+            DisplayAccountDetails(_salesperson);
+
+            DisplayContinuePrompt();
+        }
+
+        /// <summary>
+        /// tells user of successful save of account and travel info
+        /// </summary>
+        /// <param name="_salesperson"></param>
+        public void DisplayConfirmSaveAccountInfo(Salesperson _salesperson)
+        {
+            ConsoleUtil.HeaderText = "Save Account";
+            ConsoleUtil.DisplayReset();
+
+            ConsoleUtil.DisplayMessage("Account information has been successfully saved\n");
+
+            DisplayAccountDetails(_salesperson);
+
+            DisplayContinuePrompt();
+        }
+
+        public bool DisplayLoadAccountInfo(out bool maxAttemptsExceeded)
+        {
+            maxAttemptsExceeded = false;
+            string userResponse;
+
+            ConsoleUtil.HeaderText = "Load Account";
+            ConsoleUtil.DisplayReset();
+
+            ConsoleUtil.DisplayMessage("");
+            userResponse = ConsoleValidator.GetYesNoFromUser(maxAttempts, "Load account info?", out maxAttemptsExceeded);
+
+            if (maxAttemptsExceeded)
+            {
+                ConsoleUtil.DisplayMessage("It appears you are having difficult, we will return you" +
+                    "to the main menu");
+            }
+            else
+            {
+                return userResponse == "yes" ? true : false;
+            }
+
+            return maxAttemptsExceeded;
+
+        }
+
+        public bool DisplayLoadAccountInfo(Salesperson _salesperson, out bool maxAttemptsExceeded)
+        {
+            maxAttemptsExceeded = false;
+            string userResponse;
+
+            ConsoleUtil.HeaderText = "Load Account";
+            ConsoleUtil.DisplayReset();
+
+            ConsoleUtil.DisplayMessage("");
+            userResponse = ConsoleValidator.GetYesNoFromUser(maxAttempts, "Load account info?", out maxAttemptsExceeded);
+
+            if (maxAttemptsExceeded)
+            {
+                ConsoleUtil.DisplayMessage("It appears you are having difficult, we will return you" +
+                    "to the main menu");
+            }
+            else
+            {
+                return userResponse == "yes" ? true : false;               
+            }
+
+            return maxAttemptsExceeded;
+        }
+    
+        public bool DisplaySaveAccountInfo(Salesperson _salesperson, out bool maxAttemptsExceeded)
+        {
+            maxAttemptsExceeded = false;
+            string userResponse;
+
+            ConsoleUtil.HeaderText = "Save Account";
+            ConsoleUtil.DisplayReset();
+
+            ConsoleUtil.DisplayMessage("The current account info.");
+            DisplayAccountInfo(_salesperson);
+
+            ConsoleUtil.DisplayMessage("");
+            userResponse = ConsoleValidator.GetYesNoFromUser(maxAttempts, "Save account info?", out maxAttemptsExceeded);
+
+            if (maxAttemptsExceeded)
+            {
+                ConsoleUtil.DisplayMessage("It appears you are having difficult, we will return you" +
+                    "to the main menu");
+                return false;
+            }
+            else
+            {
+                return userResponse == "yes" ? true : false;
+            }
+            
+            
+        }
+
         /// <summary>
         /// get the next city to travel to from the user
         /// </summary>
         /// <returns>string City</returns>
+
         public string DisplayGetNextCity()
         {
             string nextCity = "";
 
             ConsoleUtil.DisplayPromptMessage("Enter next city: ");
-            nextCity = Console.ReadLine();
+            nextCity = UppercaseFirst(Console.ReadLine());
 
             return nextCity;
         }
-
         /// <summary>
         /// display a list of the cities traveled
         /// </summary>
+
         public void DisplayCitiesTraveled(Salesperson salesperson)
         {
             ConsoleUtil.HeaderText = "Cities Traveled";
@@ -307,10 +432,10 @@ namespace Demo_TheTravelingSalesperson
 
             DisplayContinuePrompt();
         }
-
         /// <summary>
         /// display the current account information
         /// </summary>
+
         public void DisplayAccountInfo(Salesperson salesperson)
         {
             ConsoleUtil.HeaderText = "Account Info";
@@ -320,16 +445,39 @@ namespace Demo_TheTravelingSalesperson
             ConsoleUtil.DisplayMessage("Last Name: " + salesperson.LastName);
             ConsoleUtil.DisplayMessage("Account ID: " + salesperson.AccountID);
             ConsoleUtil.DisplayMessage("Product Type: " + salesperson.Inventory.Type);
-            ConsoleUtil.DisplayMessage("Current Inventory:" + salesperson.Inventory.NumberOfUnits);
+            ConsoleUtil.DisplayMessage("Current Inventory: " + salesperson.Inventory.NumberOfUnits);
 
             DisplayContinuePrompt();
         }
+
+        /// <summary>
+        /// display current account details w/out continue prompt
+        /// </summary>
+        /// <param name="salesperson"></param>
+        public void DisplayAccountDetails(Salesperson salesperson)
+        {
+            ConsoleUtil.DisplayMessage("First Name: " + salesperson.FirstName);
+            ConsoleUtil.DisplayMessage("Last Name: " + salesperson.LastName);
+            ConsoleUtil.DisplayMessage("Account ID: " + salesperson.AccountID);
+            ConsoleUtil.DisplayMessage("Product Type: " + salesperson.Inventory.Type);
+            ConsoleUtil.DisplayMessage("Current Inventory: " + salesperson.Inventory.NumberOfUnits);
+        }
+        /// <summary>
+        /// display backorder notification
+        /// </summary>
+        /// <param name="_salesperson"></param>
+        /// <param name="Inventory"></param>
 
         public void DisplayBackOrderNotification(Salesperson _salesperson, int Inventory)
         {
             ConsoleUtil.DisplayMessage($"You have {Math.Abs(Inventory)} units on backorder. You should buy more.");
             ConsoleUtil.DisplayMessage("");
         }
+        /// <summary>
+        /// get the number of units to purchase from user
+        /// </summary>
+        /// <param name="_salesperson"></param>
+        /// <returns></returns>
 
         public int DisplayGetNumberOfUnitsToBuy(Salesperson _salesperson)
         {
@@ -346,10 +494,17 @@ namespace Demo_TheTravelingSalesperson
 
             ConsoleUtil.DisplayReset();
 
-            ConsoleUtil.DisplayMessage(numberOfUnitsToBuy + " " + _salesperson.Inventory.Type.ToString() + " units have been added to your inventory.");
+            ConsoleUtil.DisplayMessage("You have purchased " + numberOfUnitsToBuy + " " + _salesperson.Inventory.Type.ToString() + " units");
+
+            DisplayContinuePrompt();
 
             return numberOfUnitsToBuy;
         }
+        /// <summary>
+        /// get the number of units to sell from the user
+        /// </summary>
+        /// <param name="_salesperson"></param>
+        /// <returns></returns>
 
         public int DisplayGetNumberOfUnitsToSell(Salesperson _salesperson)
         {
@@ -366,10 +521,16 @@ namespace Demo_TheTravelingSalesperson
 
             ConsoleUtil.DisplayReset();
 
-            ConsoleUtil.DisplayMessage(numberOfUnitsToSell + " " + _salesperson.Inventory.Type.ToString() + " units have been subtracted from your inventory.");
+            ConsoleUtil.DisplayMessage("You have sold  " + numberOfUnitsToSell + " " + _salesperson.Inventory.Type.ToString() + " units");
+
+            DisplayContinuePrompt();
 
             return numberOfUnitsToSell;
         }
+        /// <summary>
+        /// display the inventory information to the user
+        /// </summary>
+        /// <param name="_salesperson"></param>
 
         public void DisplayInventory(Salesperson _salesperson)
         {
@@ -385,6 +546,11 @@ namespace Demo_TheTravelingSalesperson
 
             DisplayContinuePrompt();
         }
+        /// <summary>
+        /// method to take a string and make the first letter a capital letter
+        /// </summary>
+        /// <param name="s"></param>
+        /// <returns></returns>
 
         static string UppercaseFirst(string s)
         {
@@ -395,7 +561,6 @@ namespace Demo_TheTravelingSalesperson
 
             return s.First().ToString().ToUpper() + s.Substring(1);
         }
-
         #endregion
     }
 }

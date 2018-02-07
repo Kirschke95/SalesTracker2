@@ -74,7 +74,7 @@ namespace Demo_TheTravelingSalesperson
 
         }
 
-        public Product(ProductType type, int numberOfUnits)
+        public Product(ProductType type, int numberOfUnits, bool onBackOrder)
         {
 
         }
