@@ -321,40 +321,38 @@ namespace Demo_TheTravelingSalesperson
         {
             ConsoleUtil.HeaderText = "Updating Account Info";
             ConsoleUtil.DisplayReset();
-            
+            //ConsoleKeyInfo userResponse = Console.ReadKey();
 
             ConsoleUtil.DisplayMessage("Re-enter a value if you must update. If the info doesn't have to be changed," +
                 "\nsimply press the Enter key.\n");
 
-            ConsoleUtil.DisplayPromptMessage($"Current first name: {_salesperson.FirstName}." +
-                $"\n New first name: ");
-
-            ConsoleKeyInfo userResponse = Console.ReadKey(true);
-
+            Console.WriteLine();
+            Console.Write($"Current first name: {_salesperson.FirstName}.  New first name: ");
+            ConsoleKeyInfo userResponse = Console.ReadKey();
+            
             if (userResponse.Key != ConsoleKey.Enter)
             {
-                _salesperson.FirstName = Console.ReadLine();
-            }           
-
-            ConsoleUtil.DisplayPromptMessage($"Current last name: {_salesperson.LastName}." +
-                $"\n New last name: ");
-
-            if (userResponse.Key != ConsoleKey.Enter)
-            {
-                _salesperson.LastName = Console.ReadLine();
+                _salesperson.FirstName = userResponse.Key.ToString() + Console.ReadLine();
             }
 
-            ConsoleUtil.DisplayPromptMessage($"Current account ID: {_salesperson.AccountID}." +
-                $"\n New account ID: ");
+            Console.WriteLine();
+            Console.Write($"Current last name: {_salesperson.LastName}.  New last name: ");
+            userResponse = Console.ReadKey();
 
             if (userResponse.Key != ConsoleKey.Enter)
             {
-                _salesperson.AccountID = Console.ReadLine();
+                _salesperson.LastName = userResponse.Key.ToString() + Console.ReadLine();
             }
 
-            ConsoleUtil.DisplayPromptMessage($"Current age: {_salesperson.Age}");
+            Console.WriteLine();
+            Console.Write($"Current account ID: {_salesperson.AccountID}.  New account ID: ");
+            userResponse = Console.ReadKey();
 
             if (userResponse.Key != ConsoleKey.Enter)
+            {
+                _salesperson.AccountID = userResponse.Key.ToString() + Console.ReadLine();
+            }
+                       
             {
                 if (ConsoleValidator.TryGetIntegerFromUser(18, 100, 3, "your age", out int userInteger))
                 {
