@@ -14,6 +14,15 @@ namespace Demo_TheTravelingSalesperson
         private string _accountID;
         private List<string> _citiesVisited;
         private Product _inventory;
+        private int _age;
+        private bool _isHockeyFan;
+
+        public bool IsHockeyFan
+        {
+            get { return _isHockeyFan; }
+            set { _isHockeyFan = value; }
+        }
+
 
         #endregion
 
@@ -47,6 +56,12 @@ namespace Demo_TheTravelingSalesperson
         {
             get { return _inventory; }
             set { _inventory = value; }
+        }
+
+        public int Age
+        {
+            get { return _age; }
+            set { _age = value; }
         }
 
         #endregion

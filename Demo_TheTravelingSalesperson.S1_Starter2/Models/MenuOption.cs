@@ -7,6 +7,7 @@
     {
         None,
         SetupAccount,
+        UpdateAccountInfo,
         Travel,
         DisplayCities,
         DisplayAccountInfo,

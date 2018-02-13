@@ -103,6 +103,9 @@ namespace Demo_TheTravelingSalesperson
                     case MenuOption.SetupAccount:
                         _salesperson = _consoleView.DisplaySetupAccount();
                         break;
+                    case MenuOption.UpdateAccountInfo:
+                        DisplayUpdateAccountInfo();
+                        break;
                     case MenuOption.Travel:
                         Travel();
                         break;
@@ -165,6 +168,11 @@ namespace Demo_TheTravelingSalesperson
             _consoleView.DisplayCitiesTraveled(_salesperson);
         }
 
+        private void DisplayUpdateAccountInfo()
+        {
+            _consoleView.DisplayUpdateAccountInfo(_salesperson);
+        }
+
         /// <summary>
         /// display account information
         /// </summary>
@@ -195,7 +203,7 @@ namespace Demo_TheTravelingSalesperson
             bool maxAttemptsExceeded = false;
             bool loadAccountInfo = false;
 
-            if (_salesperson.AccountID != "")
+            /*if (_salesperson.AccountID != "")
             {
                 loadAccountInfo = _consoleView.DisplayLoadAccountInfo(_salesperson, out maxAttemptsExceeded);
             }
@@ -204,12 +212,12 @@ namespace Demo_TheTravelingSalesperson
                 loadAccountInfo = _consoleView.DisplayLoadAccountInfo(out maxAttemptsExceeded);
             }
             if (loadAccountInfo && maxAttemptsExceeded)
-            {
+            */
                 XmlServices xmlServices = new XmlServices(DataSettings.dataFilePathXml);
                 xmlServices.ReadSalespersonFromDataFile();
 
                 _consoleView.DisplayConfirmLoadAccountInfo(_salesperson);
-            }
+            
             
         }
 

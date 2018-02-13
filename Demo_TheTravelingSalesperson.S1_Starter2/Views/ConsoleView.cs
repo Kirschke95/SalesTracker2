@@ -115,7 +115,7 @@ namespace Demo_TheTravelingSalesperson
         public Salesperson DisplaySetupAccount()
         {
             Salesperson _salesperson = new Salesperson();
- 
+
             ConsoleUtil.HeaderText = "Account Setup";
             ConsoleUtil.DisplayReset();
 
@@ -125,6 +125,25 @@ namespace Demo_TheTravelingSalesperson
             _salesperson.LastName = UppercaseFirst(Console.ReadLine());
             ConsoleUtil.DisplayPromptMessage("Account ID: ");
             _salesperson.AccountID = Console.ReadLine();
+            if (!ConsoleValidator.TryGetIntegerFromUser(18, 100, 3, "Age", out int userInteger))
+            {
+                Console.WriteLine("Looks like you are having trouble with your age. Clearly you are old as dirt, setting age to 100.");
+                _salesperson.Age = 100;
+            }
+            _salesperson.Age = userInteger;
+            string userResponse = ConsoleValidator.GetYesNoFromUser(3, "Are you a hockey fan?", out bool maxAttemptsExceeded);
+            if (maxAttemptsExceeded)
+            {
+                Console.WriteLine("Not valid answer. You must not be a hockey fan.");
+            }
+            if (userResponse == "yes")
+            {
+                _salesperson.IsHockeyFan = true;
+            }
+            else
+            {
+                _salesperson.IsHockeyFan = false;
+            }
 
             ConsoleUtil.DisplayMessage("Product Types");
             ConsoleUtil.DisplayMessage("");
@@ -216,14 +235,15 @@ namespace Demo_TheTravelingSalesperson
                 ConsoleUtil.DisplayMessage("");
                 Console.Write(
                     "\t" + "1. Setup Account" + Environment.NewLine +
-                    "\t" + "2. Travel" + Environment.NewLine +
-                    "\t" + "3. Display Cities" + Environment.NewLine +
-                    "\t" + "4. Display Account Info" + Environment.NewLine +
-                    "\t" + "5. Buy" + Environment.NewLine +
-                    "\t" + "6. Sell" + Environment.NewLine +
-                    "\t" + "7. Display Inventory" + Environment.NewLine +
-                    "\t" + "8. Save Account Info" + Environment.NewLine +
-                    "\t" + "9. Load Account Info" + Environment.NewLine +
+                    "\t" + "2. Update Account Info" + Environment.NewLine +
+                    "\t" + "3. Travel" + Environment.NewLine +
+                    "\t" + "4. Display Cities" + Environment.NewLine +
+                    "\t" + "5. Display Account Info" + Environment.NewLine +
+                    "\t" + "6. Buy" + Environment.NewLine +
+                    "\t" + "7. Sell" + Environment.NewLine +
+                    "\t" + "8. Display Inventory" + Environment.NewLine +
+                    "\t" + "9. Save Account Info" + Environment.NewLine +
+                    "\t" + "0. Load Account Info" + Environment.NewLine +
                     "\t" + "E. Exit" + Environment.NewLine);
 
 
@@ -239,34 +259,38 @@ namespace Demo_TheTravelingSalesperson
                         usingMenu = false;
                         break;
                     case '2':
-                        userMenuChoice = MenuOption.Travel;
+                        userMenuChoice = MenuOption.UpdateAccountInfo;
                         usingMenu = false;
                         break;
                     case '3':
-                        userMenuChoice = MenuOption.DisplayCities;
+                        userMenuChoice = MenuOption.Travel;
                         usingMenu = false;
                         break;
                     case '4':
-                        userMenuChoice = MenuOption.DisplayAccountInfo;
+                        userMenuChoice = MenuOption.DisplayCities;
                         usingMenu = false;
                         break;
                     case '5':
-                        userMenuChoice = MenuOption.Buy;
+                        userMenuChoice = MenuOption.DisplayAccountInfo;
                         usingMenu = false;
                         break;
                     case '6':
-                        userMenuChoice = MenuOption.Sell;
+                        userMenuChoice = MenuOption.Buy;
                         usingMenu = false;
                         break;
                     case '7':
-                        userMenuChoice = MenuOption.DisplayInventory;
+                        userMenuChoice = MenuOption.Sell;
                         usingMenu = false;
                         break;
                     case '8':
-                        userMenuChoice = MenuOption.SaveAccountInfo;
+                        userMenuChoice = MenuOption.DisplayInventory;
                         usingMenu = false;
                         break;
                     case '9':
+                        userMenuChoice = MenuOption.SaveAccountInfo;
+                        usingMenu = false;
+                        break;
+                    case '0':
                         userMenuChoice = MenuOption.LoadAccountInfo;
                         usingMenu = false;
                         break;
@@ -291,6 +315,56 @@ namespace Demo_TheTravelingSalesperson
             Console.CursorVisible = true;
 
             return userMenuChoice;
+        }
+
+        public Salesperson DisplayUpdateAccountInfo(Salesperson _salesperson)
+        {
+            ConsoleUtil.HeaderText = "Updating Account Info";
+            ConsoleUtil.DisplayReset();
+            
+
+            ConsoleUtil.DisplayMessage("Re-enter a value if you must update. If the info doesn't have to be changed," +
+                "\nsimply press the Enter key.\n");
+
+            ConsoleUtil.DisplayPromptMessage($"Current first name: {_salesperson.FirstName}." +
+                $"\n New first name: ");
+
+            ConsoleKeyInfo userResponse = Console.ReadKey(true);
+
+            if (userResponse.Key != ConsoleKey.Enter)
+            {
+                _salesperson.FirstName = Console.ReadLine();
+            }           
+
+            ConsoleUtil.DisplayPromptMessage($"Current last name: {_salesperson.LastName}." +
+                $"\n New last name: ");
+
+            if (userResponse.Key != ConsoleKey.Enter)
+            {
+                _salesperson.LastName = Console.ReadLine();
+            }
+
+            ConsoleUtil.DisplayPromptMessage($"Current account ID: {_salesperson.AccountID}." +
+                $"\n New account ID: ");
+
+            if (userResponse.Key != ConsoleKey.Enter)
+            {
+                _salesperson.AccountID = Console.ReadLine();
+            }
+
+            ConsoleUtil.DisplayPromptMessage($"Current age: {_salesperson.Age}");
+
+            if (userResponse.Key != ConsoleKey.Enter)
+            {
+                if (ConsoleValidator.TryGetIntegerFromUser(18, 100, 3, "your age", out int userInteger))
+                {
+                    Console.WriteLine("Incorrect answer, you must be old. Age set to 100.");
+                    _salesperson.Age = 100;
+                }
+                _salesperson.Age = userInteger;
+            }
+                
+            return _salesperson;
         }
 
         /// <summary>
@@ -343,6 +417,7 @@ namespace Demo_TheTravelingSalesperson
             }
             else
             {
+                maxAttemptsExceeded = true;
                 return userResponse == "yes" ? true : false;
             }
 
@@ -368,12 +443,12 @@ namespace Demo_TheTravelingSalesperson
             }
             else
             {
-                return userResponse == "yes" ? true : false;               
+                return userResponse == "yes" ? true : false;
             }
 
             return maxAttemptsExceeded;
         }
-    
+
         public bool DisplaySaveAccountInfo(Salesperson _salesperson, out bool maxAttemptsExceeded)
         {
             maxAttemptsExceeded = false;
@@ -398,8 +473,8 @@ namespace Demo_TheTravelingSalesperson
             {
                 return userResponse == "yes" ? true : false;
             }
-            
-            
+
+
         }
 
         /// <summary>
@@ -446,6 +521,22 @@ namespace Demo_TheTravelingSalesperson
             ConsoleUtil.DisplayMessage("Account ID: " + salesperson.AccountID);
             ConsoleUtil.DisplayMessage("Product Type: " + salesperson.Inventory.Type);
             ConsoleUtil.DisplayMessage("Current Inventory: " + salesperson.Inventory.NumberOfUnits);
+            ConsoleUtil.DisplayMessage("Age: " + salesperson.Age);
+            ConsoleUtil.DisplayMessage("Cities traveled:");
+
+            foreach (string city in salesperson.CitiesVisited)
+            {
+                ConsoleUtil.DisplayMessage(city);
+            }        
+
+            if (salesperson.IsHockeyFan)
+            {
+                ConsoleUtil.DisplayMessage("Is a hockey fan, NICE.");
+            }
+            else
+            {
+                ConsoleUtil.DisplayMessage("Is not a hockey fan, LAME.");
+            }
 
             DisplayContinuePrompt();
         }
@@ -461,6 +552,22 @@ namespace Demo_TheTravelingSalesperson
             ConsoleUtil.DisplayMessage("Account ID: " + salesperson.AccountID);
             ConsoleUtil.DisplayMessage("Product Type: " + salesperson.Inventory.Type);
             ConsoleUtil.DisplayMessage("Current Inventory: " + salesperson.Inventory.NumberOfUnits);
+            ConsoleUtil.DisplayMessage("Age:" + salesperson.Age);
+            ConsoleUtil.DisplayMessage("Cities traveled:");
+
+            foreach (string city in salesperson.CitiesVisited)
+            {
+                ConsoleUtil.DisplayMessage(city);
+            }
+
+            if (salesperson.IsHockeyFan)
+            {
+                ConsoleUtil.DisplayMessage("Is a hockey fan, NICE.");
+            }
+            else
+            {
+                ConsoleUtil.DisplayMessage("Is not a hockey fan, LAME.");
+            }
         }
         /// <summary>
         /// display backorder notification
